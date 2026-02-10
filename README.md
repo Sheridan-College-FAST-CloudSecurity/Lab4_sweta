@@ -10,26 +10,29 @@ Key Components and Their Responsibilities:
 3.	Database (MySQL/PostgreSQL): Stores and retrieves application data
 4.	Operating System (Linux/Windows): Provides the foundation for all software to run
 5.	File System: Stores application code, uploads, and configuration files
+   
 Benefits:
 •	Simplicity: Easiest to set up - just install everything on one machine
 •	Low Cost: Requires only one server (physical or virtual)
 •	Easy Maintenance: Only one system to update, monitor, and backup
 •	Low Latency: All components communicate locally via localhost (no network delays)
 •	Quick Deployment: Can be running in minutes with pre-configured stacks like XAMPP/WAMP
+
 Limitations:
 •	Single Point of Failure: If the server crashes, everything goes down
 •	Limited Scalability: Can only scale vertically (bigger machine), not horizontally
 •	Resource Contention: CPU, memory, and disk I/O competition between components
 •	Security Risks: Database exposed on same machine as web server
 •	Maintenance Downtime: Updates require taking entire application offline
+
 Real-World Examples:
 This pattern is commonly found in small business websites, such as local restaurants or retail shops that use platforms like WordPress on shared hosting. It is also typical for personal blogs and portfolios. Historically, many successful companies started this way; for instance, Facebook initially ran on a single server at Harvard University before scaling. University student projects and internal tools for small teams often use this architecture due to its simplicity.
+
 Typical Use Cases Where This Architecture Excels:
 The Single-Machine Webserver excels in scenarios with low traffic and minimal complexity. It is ideal for personal projects, prototypes, and proof-of-concept applications where rapid deployment is needed. Development and testing environments benefit from this setup because it mirrors a production-like environment without the overhead. Small business brochure websites with predictable, low visitor counts (under 1,000 daily users) are well-suited. Educational purposes, such as teaching web development fundamentals, also commonly use this architecture.
+
 Scenarios Where This Architecture Would Be a Poor Choice:
 This architecture is unsuitable for high-traffic or mission-critical applications. E-commerce sites during holiday sales or promotional events would likely crash under load. Applications expecting viral growth or unpredictable traffic spikes cannot rely on a single server. Systems requiring high availability (99.9% uptime or more), such as online banking or financial services, need redundancy that this architecture lacks. Environments where frequent updates or maintenance must occur without downtime are also poorly served, as taking the single server offline affects the entire application.
-
-
 
 
 b) Three-Tier Web Service Architecture
@@ -39,14 +42,17 @@ Presentation Tier (Tier 1):
 •	Load Balancer: Distributes incoming traffic across multiple web servers
 •	Web Servers: Handle HTTP requests, serve static files, forward dynamic requests to application tier
 •	SSL Terminator: Manages HTTPS encryption/decryption
+
 Application Tier (Tier 2):
 •	Application Servers: Execute business logic (Node.js, Java, Python apps)
 •	Business Logic: Core application functionality
 •	API Endpoints: Interface for presentation tier communication
+
 Data Tier (Tier 3):
 •	Database Server: Primary data storage (SQL or NoSQL)
 •	Database Management System: MySQL, PostgreSQL, MongoDB, etc.
 •	Backup System: Regular database backups
+
 Benefits:
 •	Scalability: Each tier can scale independently
 •	Better Fault Isolation: Failure in one tier doesn't necessarily bring down others
@@ -54,6 +60,7 @@ Benefits:
 •	Security: Database isolated in private network
 •	Team Separation: Different teams can work on different tiers
 •	Flexible Technology Choices: Different technologies per tier
+
 Limitations:
 •	Increased Complexity: More components to configure and maintain
 •	Network Latency: Communication between tiers adds overhead
@@ -61,10 +68,13 @@ Limitations:
 •	Deployment Complexity: Coordinating updates across tiers
 •	More Points of Failure: More components that can fail
 •	Harder to Debug: Issues can occur in any tier
+
 Real-World Examples:
 This architecture is widely used in medium to large-scale web applications. E-commerce platforms like Shopify often employ a three-tier structure to handle product catalogs, shopping carts, and user accounts. University learning management systems (e.g., Canvas or Blackboard) use it to separate frontend interfaces, application logic, and student databases. Many SaaS products (Software as a Service), such as project management tools or CRM systems, adopt this pattern. Online banking applications for regional banks frequently implement three-tier architectures to ensure security and scalability.
+
 Typical Use Cases Where This Architecture Excels:
 The Three-Tier architecture excels in business applications with moderate to high user concurrency. It is well-suited for enterprise web applications like customer relationship management (CRM) systems, enterprise resource planning (ERP) software, and content management systems (CMS). Online marketplaces and e-commerce sites benefit from the ability to scale the web tier during sales events and the application tier for order processing. Educational platforms and online learning tools that need to serve thousands of simultaneous users also find this architecture effective. Applications requiring clear separation between user interface, business logic, and data storage for maintainability and team workflow are ideal candidates.
+
 Scenarios Where This Architecture Would Be a Poor Choice:
 For simple static websites or blogs with very low traffic, a three-tier setup is overkill and unnecessarily complex and costly. Real-time applications requiring ultra-low latency, such as multiplayer online games or financial trading platforms, may suffer from the network hops between tiers. Internet of Things (IoT) applications that process millions of small messages from devices might find the tiered structure inefficient. Projects with extremely tight budgets or timelines, like hackathon prototypes or MVP (Minimum Viable Product) versions that need to be built in hours, would be better served by simpler architectures. Serverless or Platform-as-a-Service (PaaS) scenarios, where the goal is to minimize infrastructure management, also do not align well with the operational overhead of a three-tier system.
 
@@ -76,10 +86,12 @@ Reverse Proxy Layer:
 •	Load Balancer: Distributes requests to backend servers
 •	SSL Terminator: Handles HTTPS encryption
 •	Caching Layer: Caches static content and API responses
+
 Backend Layer:
 •	Application Servers: Multiple servers running the actual application
 •	Web Servers: Apache, Nginx serving the application
 •	Session Stores: Redis/Memcached for shared session storage
+
 Benefits:
 •	Improved Security: Hides backend servers, provides DDoS protection
 •	Load Distribution: Evenly spreads traffic across multiple servers
@@ -88,16 +100,20 @@ Benefits:
 •	Compression: Reduces bandwidth usage
 •	Single Point of Entry: Simplified DNS and certificate management
 •	A/B Testing Support: Can route traffic to different backends
+
 Limitations:
 •	Additional Latency: Extra hop adds 5-50ms depending on setup
 •	Single Point of Failure: If proxy fails, entire system is down (unless clustered)
 •	Configuration Complexity: Need to configure proxy rules properly
 •	Potential Bottleneck: Proxy can become overloaded
 •	Debugging Complexity: Harder to trace requests through proxy
+
 Real-World Examples:
 This pattern is fundamental to many high-traffic websites and services. GitHub uses Nginx as a reverse proxy to manage traffic to its backend services. Netflix employs the Zuul gateway as a reverse proxy and API gateway for its microservices architecture.  WordPress.com utilizes Nginx reverse proxies in front of pools of PHP-FPM application servers to handle millions of blogs. Reddit relies on HAProxy for load balancing across its application servers. Content Delivery Networks (CDNs) like Cloudflare essentially act as globally distributed reverse proxies, caching content close to users and protecting origin servers.
+
 Typical Use Cases Where This Architecture Excels:
 Reverse Proxy Architecture excels in high-traffic websites and web applications that require reliable load distribution and DDoS mitigation. It is ideal for modern web applications using microservices, where an API gateway (a form of reverse proxy) routes requests to appropriate backend services. Legacy application modernization projects often place a reverse proxy in front of an old monolithic application to add security, caching, and load balancing without rewriting the entire codebase. Global applications that integrate with a CDN benefit from the proxy managing origin shielding and cache control headers. Systems requiring flexible deployment strategies (like blue-green or canary deployments) use the proxy's routing capabilities to direct user traffic.
+
 Scenarios Where This Architecture Would Be a Poor Choice:
 For a simple, low-traffic personal blog or project website, introducing a reverse proxy adds unnecessary complexity and cost. Local development environments where simplicity and fast iteration are key typically do not need a reverse proxy layer. Applications where every millisecond of latency is critical, such as high-frequency trading platforms or real-time competitive gaming servers, might avoid the extra hop. Small teams with limited operations or DevOps expertise might struggle with the configuration and maintenance overhead. Projects with extremely constrained budgets that cannot afford the additional compute instance for the proxy would find this architecture impractical.
 
@@ -109,20 +125,24 @@ Service Layer:
 •	Independent Services: Each service handles specific business capability
 •	Container Runtime: Docker containers for each service
 •	Orchestration: Kubernetes/ECS for managing containers
+
 Communication Layer:
 •	API Gateway: Single entry point for all client requests
 •	Service Discovery: Consul/Eureka for finding services
 •	Message Queue: RabbitMQ/Kafka for async communication
 •	Event Bus: For event-driven communication
+
 Data Layer:
 •	Database per Service: Each service has its own database
 •	Polyglot Persistence: Different databases for different needs
 •	Data Replication: For data sharing between services
+
 Operational Layer:
 •	Centralized Logging: ELK stack or CloudWatch Logs
 •	Distributed Tracing: Jaeger or AWS X-Ray
 •	Monitoring: Prometheus or Datadog
 •	CI/CD Pipeline: Automated deployment per service
+
 Benefits:
 •	Independent Deployment: Update one service without affecting others
 •	Technology Flexibility: Each service can use different technologies
@@ -130,6 +150,7 @@ Benefits:
 •	Fault Isolation: One service failure doesn't bring down entire system
 •	Team Autonomy: Small teams own entire services
 •	Faster Development: Teams can work in parallel
+
 Limitations:
 •	Distributed System Complexity: Network issues, latency, partial failures
 •	Data Consistency: Hard to maintain ACID transactions
@@ -137,12 +158,14 @@ Limitations:
 •	Testing Complexity: Need to test interactions between services
 •	Network Overhead: Many network calls between services
 •	Skill Requirements: Need expertise in distributed systems
+
 Real-World Examples:
 •	Netflix: Pioneer in microservices, thousands of services
 •	Uber: Each functionality (payment, dispatch, etc.) is separate service
 •	Spotify: Hundreds of services for music streaming
 •	Amazon: Even their "Add to Cart" is a separate service
 •	Twitter: Migrated from monolith to microservices
+
 AWS Services for Implementation:
 •	Compute & Orchestration: Amazon ECS (Elastic Container Service), Amazon EKS (Elastic Kubernetes Service), AWS Fargate (serverless containers).
 •	API Management: Amazon API Gateway for routing and API management.
@@ -167,18 +190,22 @@ Compute Layer:
 •	Function-as-a-Service: AWS Lambda, Azure Functions
 •	Event Sources: API Gateway, S3 events, DynamoDB streams
 •	Runtime Environments: Node.js, Python, Java, etc.
+
 API Layer:
 •	API Gateway: Routes requests to functions
 •	Authentication: Cognito for user management
 •	Rate Limiting: Built into API Gateway
+
 Data Layer:
 •	Serverless Databases: DynamoDB, Aurora Serverless
 •	Object Storage: S3 for files and static content
 •	Caching: DAX for DynamoDB, ElastiCache Serverless
+
 Integration Layer:
 •	Event Bridge: For event-driven architectures
 •	Step Functions: For workflow orchestration
 •	SQS/SNS: For messaging between functions
+
 Benefits:
 •	No Server Management: AWS manages infrastructure
 •	Auto-scaling: Scales from zero to thousands instantly
@@ -194,12 +221,14 @@ Limitations:
 •	Debugging Complexity: Harder to debug distributed functions
 •	Local Testing: Different from production environment
 •	Cost Unpredictability: Can get expensive with high volume
+
 Real-World Examples:
 •	Airbnb: Uses Lambda for image processing
 •	Nordstrom: Serverless for inventory management
 •	Coca-Cola: Vending machine data processing
 •	FINRA: Processes 75 billion events daily with serverless
 •	iRobot: Roomba data processing with AWS Lambda
+
 AWS Services for Implementation:
 •	Compute: AWS Lambda
 •	API Management: API Gateway
@@ -209,6 +238,7 @@ AWS Services for Implementation:
 •	Events: EventBridge
 •	Orchestration: Step Functions
 •	Monitoring: CloudWatch Logs and Metrics
+
 Cost Considerations vs Traditional:
 •	No Idle Cost: Don't pay for servers when not in use
 •	Granular Billing: Pay per 100ms of execution
@@ -303,12 +333,14 @@ c) Database Security Group
 
 
 My Three-Tier Architecture Implementation
+
 How I Set Up My Three-Tier System
 I built a basic three-tier web application on AWS using what I learned in class. Here's how I did it step by step:
 First, I created a VPC (Virtual Private Cloud) which is like my private network in AWS. I made it with both public and private subnets. The public subnet is for servers that need internet access, and the private subnet is for servers that should be protected from direct internet access.
 For the web tier (presentation tier), I launched an EC2 instance with Amazon Linux 2. I chose t2.micro because it's free tier eligible. I installed Nginx web server on it and configured it to serve web pages. This server gets a public IP address so users can access it from the internet.
 For the application tier, I launched another EC2 instance but placed it in a private subnet. This means it has no public IP address and is more secure. On this server, I installed Node.js and created a simple web application that handles business logic.
 For the database tier, I created an RDS MySQL instance. I placed this in the private subnet too. I configured it with a master password and made sure it was accessible only from the application tier.
+
 The tricky part was connecting everything together. I had to create security groups (which are like firewalls) to control traffic:
 •	Web tier allows HTTP/HTTPS from the internet
 •	Application tier only accepts traffic from the web tier
@@ -320,6 +352,7 @@ I tested everything by creating a simple web page on the web tier and making sur
 	How would you scale the web tier? (EC2 Auto Scaling, Load Balancers)
 Right now, I have just one web server. If my website becomes popular and thousands of people try to visit at once, this single server will crash. To prevent this, I need to scale the web tier.
 The solution is to use an Application Load Balancer (ALB) with Auto Scaling Groups. Here's how it works:
+
 1.	Add a Load Balancer: Instead of users connecting directly to my web server, they connect to a load balancer. The load balancer then forwards requests to one of many web servers.
 2.	Create Multiple Identical Web Servers: I need to make copies of my web server. In AWS, I create a "Launch Template" which is like a recipe for making web servers. It specifies the AMI, instance type, security groups, and startup scripts.
 3.	Set Up Auto Scaling: This is the cool part. I create an Auto Scaling Group that:
@@ -330,11 +363,13 @@ o	Replaces servers if they fail
 4.	Configure Scaling Rules: I tell AWS when to add or remove servers:
 o	Add 1 server if CPU usage goes above 70% for 5 minutes
 o	Remove 1 server if CPU usage stays below 30% for 10 minutes
+
 AWS Services I Would Use:
 •	Application Load Balancer (ALB) - distributes traffic
 •	Auto Scaling Groups - manages server count
 •	CloudWatch - monitors performance
 •	Launch Templates - server configuration
+
 Real Example: If my school website gets mentioned in the news and traffic spikes from 100 to 10,000 visitors, auto scaling would automatically add more web servers to handle the load. When traffic returns to normal, it removes the extra servers to save money.
 
 	How would you scale the application tier? (Horizontal scaling, containerization) 
@@ -344,6 +379,7 @@ Traditional scaling would mean launching more EC2 instances with my application,
 •	Each instance needs its own operating system (wastes resources)
 •	Difficult to ensure all instances are identical
 •	Slow to deploy updates
+
 Containerization solves these problems. A container packages my application with all its dependencies into a single unit that runs the same everywhere.
 Here's my scaling strategy:
 1.	Create Docker Container: I package my Node.js application into a Docker container. This includes the code, Node.js runtime, and all libraries.
@@ -354,16 +390,19 @@ o	Run 2 containers minimum for redundancy
 o	Add more containers when CPU or memory usage is high
 o	Scale down when not needed
 5.	Load Balance Between Containers: An internal load balancer distributes requests from the web tier to all the application containers.
+
 Benefits of This Approach:
 •	Consistency: Containers run exactly the same in development and production
 •	Efficiency: Multiple containers can run on one server (better resource use)
 •	Fast Deployment: Deploy new version by just updating the container image
 •	Easy Scaling: Add or remove containers in seconds
+
 AWS Services I Would Use:
 •	Amazon ECR - stores Docker images
 •	Amazon ECS - runs containers
 •	AWS Fargate - serverless containers (no server management)
 •	Application Load Balancer - distributes traffic to containers
+
 Real Example: My application handles user logins and processes orders. During peak hours (like lunchtime for a food app), more containers automatically start to handle increased login and order processing. During quiet hours, fewer containers run to save costs.
 
 	How would you scale the database tier? (Read replicas, sharding)
@@ -371,69 +410,86 @@ The database is often the hardest part to scale. If the database is slow, everyt
 I need a multi-step approach to scale the database:
 Step 1: Add Read Replicas
 Right now, I have one database that handles both read operations (SELECT queries) and write operations (INSERT, UPDATE, DELETE). When traffic increases, reads and writes compete for resources.
+
 Solution: Create read replicas - these are copies of the main database that handle only read operations.
 How it works:
 •	Primary database handles all writes
 •	Read replicas are synchronized copies that handle reads
 •	Application is modified to send read queries to replicas, write queries to primary
+
 Benefits:
 •	Read performance improves significantly
 •	Primary database focuses on writes
 •	If a replica fails, others can still handle reads
+
 Step 2: Add Caching Layer
 Many database queries are repetitive. For example, on an e-commerce site, product information doesn't change often but is viewed frequently.
+
 Solution: Add Amazon ElastiCache (Redis or Memcached) to cache frequently accessed data.
+
 How it works:
 1.	Application checks cache first for data
 2.	If found in cache, return immediately (fast!)
 3.	If not in cache, query database, then store result in cache
 4.	Next time, data comes from cache
+
 Benefits:
 •	Reduces database load by 70-90%
 •	Much faster response times (milliseconds vs seconds)
 •	Database can handle more important queries
+
 Step 3: Implement Connection Pooling
 Each time my application connects to the database, there's overhead. With many application containers, this creates many connections.
+
 Solution: Use RDS Proxy, which manages database connections efficiently.
+
 Benefits:
 •	Reduces database load from connection management
 •	Improves application performance
 •	Handles failover better
+
 Step 4: Advanced Options (For Very Large Scale)
 If my application grows really large, I might need:
 •	Sharding: Split database into multiple smaller databases
 •	Amazon Aurora: More scalable database engine
 •	Global Database: For worldwide applications
+
 AWS Services I Would Use:
 •	RDS Read Replicas - for scaling reads
 •	Amazon ElastiCache - for caching
 •	RDS Proxy - for connection pooling
 •	Amazon Aurora - for advanced scaling needs
+
 Real Example: A social media app's database. The primary handles posts and comments (writes). 3 read replicas handle profile views and news feeds (reads). ElastiCache stores user sessions and trending topics. During viral events, add temporary read replicas.
 
 3.	Cost Analysis
 
 	Basic Three-Tier Implementation Monthly Cost
 For my simple implementation with 1 web server, 1 app server, and 1 database:
+
 Assumptions:
 •	Region: US East (N. Virginia) - us-east-1
 •	30-day month = 730 hours
 •	Free tier eligible where possible
 •	Estimated data transfer: 100GB out
+
 Cost Breakdown:
 1. Web Tier (EC2 Instance):
 •	EC2 t2.micro: 730 hours × $0.0116 = $8.47
 •	EBS Storage (8GB gp2): 8 × $0.10 = $0.80
 •	Subtotal: $9.27
+
 2. Application Tier (EC2 Instance):
 •	EC2 t2.micro: 730 hours × $0.0116 = $8.47
 •	EBS Storage (8GB gp2): 8 × $0.10 = $0.80
 •	Subtotal: $9.27
+
 3. Database Tier (RDS):
 •	RDS db.t3.micro: 730 hours × $0.017 = $12.41
 •	Storage (20GB gp2): 20 × $0.115 = $2.30
 •	Backup Storage (20GB): 20 × $0.095 = $1.90
 •	Subtotal: $16.61
+
 4. Networking:
 •	VPC: Free
 •	Data Transfer Out (100GB): 100 × $0.09 = $9.00
@@ -445,12 +501,14 @@ Note: This is reasonable for a small website or school project. It can handle ma
 	Scaled Architecture Monthly Cost Estimate
 If I implement all the scaling strategies, the cost increases:
 Scaled Cost Breakdown:
+
 1. Web Tier (Scaled):
 •	Application Load Balancer: 730 × $0.0225 = $16.43
 •	ALB LCUs (10/day): 10 × $0.008 × 30 = $2.40
 •	EC2 t3.medium (2 always on): 2 × 730 × $0.0416 = $60.74
 •	Additional EC2 during peak (4 at 50%): 4 × 730 × $0.0416 × 0.5 = $30.37
 •	Subtotal: $109.94
+
 2. Application Tier (Scaled with ECS Fargate):
 •	ECS Fargate (2 tasks always on):
 o	vCPU: 2 × 0.5 × 730 × $0.04048 = $29.55
@@ -459,6 +517,7 @@ o	Total: $36.04
 •	Additional tasks during peak (4 at 50%): $18.02
 •	ECR Storage (1GB): 1 × $0.10 = $0.10
 •	Subtotal: $54.16
+
 3. Database Tier (Scaled):
 •	RDS Primary db.t3.medium: 730 × $0.068 = $49.64
 •	Read Replicas (2): 2 × $49.64 = $99.28
@@ -466,6 +525,7 @@ o	Total: $36.04
 •	RDS Proxy (2 vCPU): 2 × 730 × $0.015 = $21.90
 •	Storage (100GB): 100 × $0.115 = $11.50
 •	Subtotal: $331.24
+
 4. Additional Services:
 •	CloudFront (1TB data): 1000 × $0.085 = $85.00
 •	CloudWatch (50 metrics): 50 × $0.30 = $15.00
@@ -480,6 +540,7 @@ That's almost 8 times more expensive! But it can handle 10,000+ daily users inst
 •	Scaled Implementation: $598.14/month
 •	Increase: 7.77× higher cost
 •	Capacity Increase: Can handle 10-20× more traffic
+
 Important: This scaled cost assumes:
 •	Traffic increase from 1,000 to 10,000+ daily users
 •	24/7 operation at higher capacity
@@ -487,27 +548,32 @@ Important: This scaled cost assumes:
 
 	How to Reduce Costs with Optimization
 $598 per month is a lot for a student project! Here's how I could reduce costs:
+
 Web Tier Optimization:
 1.	Use Spot Instances: These are discounted servers (70-90% off) that AWS sells when they have extra capacity. Perfect for web servers since if they get interrupted, the load balancer sends traffic to other servers.
 2.	Implement Better Caching: Use CloudFront more aggressively to cache content. This reduces load on web servers, so I need fewer of them.
 3.	Right-Size Instances: Monitor actual usage. If servers are only using 30% of CPU on average, I might use smaller, cheaper instances.
 Expected Savings: Could reduce $110 to around $65 (40% savings)
+
 Application Tier Optimization:
 1.	Use Fargate Spot: Same concept as EC2 Spot, but for containers. 50-70% savings.
 2.	Optimize Container Size: If my container only needs 0.25 vCPU but I'm giving it 0.5 vCPU, I'm wasting money. Monitor and adjust.
 3.	Use Graviton Processors: ARM-based processors that offer 20% better price/performance.
 Expected Savings: Could reduce $54 to around $27 (50% savings)
+
 Database Tier Optimization:
 1.	Use Aurora Serverless: Instead of fixed-size database, use one that scales automatically and charges per second of use. Good for variable workloads.
 2.	Optimize Queries: Slow queries waste database resources. Use Performance Insights to find and fix them.
 3.	Archive Old Data: Move old data (like logs from last year) to cheap storage like S3 Glacier. Keep only recent data in the expensive database.
 4.	Delete Unused Snapshots: Old backups take up space and cost money. Set up automatic cleanup.
 Expected Savings: Could reduce $331 to around $215 (35% savings)
+
 General Cost-Saving Tips:
 1.	Set Budget Alerts: Use AWS Budgets to get alerts if I'm spending too much.
 2.	Clean Up Regularly: Delete test resources, unused storage volumes, and old snapshots.
 3.	Use AWS Free Tier: Some services have free tiers for 12 months.
 4.	Monitor with Cost Explorer: Regularly check where money is being spent.
+
 Optimized Total Cost:
 With all optimizations:
 •	Original Scaled Cost: $598
@@ -517,21 +583,25 @@ That's much more reasonable! I could handle high traffic without breaking my bud
 
 	My Implementation Plan
 If I were actually going to implement this scaling, here's my step-by-step plan:
+
 Phase 1 (First Week):
 1.	Add Application Load Balancer in front of web server
 2.	Create second web server manually
 3.	Set up CloudFront for static files
 4.	Add ElastiCache Redis for basic caching
+
 Phase 2 (Second Week):
 1.	Set up Auto Scaling Group for web tier
 2.	Create Docker container of my application
 3.	Set up ECS Fargate with 2 containers
 4.	Add one read replica to database
+
 Phase 3 (Ongoing):
 1.	Implement Spot Instances for cost savings
 2.	Optimize database queries
 3.	Set up monitoring and alerts
 4.	Regularly review and adjust based on usage
+
 Part 3: Case Study Analysis
 
 1.  Research Case Studies:
@@ -548,6 +618,7 @@ Netflix decided to completely change how they built software. Instead of having 
 •	Another just streams the video to your device
 This was smart because if one service has a problem (like the recommendation engine), it doesn't crash the whole Netflix app. You might not get good movie suggestions, but you can still watch what you want.
 They also moved everything to Amazon Web Services (AWS). Instead of buying and maintaining their own servers, they rent computing power from AWS. This means they can easily add more servers when lots of people are watching (like on Friday nights) and use fewer servers during quiet times (like Tuesday mornings).
+
 	The Challenges They Faced
 This wasn't easy. When Netflix started this transition, they were basically inventing this approach as they went along. Some of their biggest challenges were:
 1.	Learning new skills: Their engineers had to learn completely new ways of building software
@@ -672,28 +743,33 @@ After learning from Netflix and Airbnb, here's what I think StudyHub should buil
 Let me explain why I chose each component:
 CloudFront: StudyHub has users all over the country. CloudFront stores copies of study materials at locations near users, so a student in California doesn't have to wait for files from servers in Virginia.
 Load Balancer + Auto Scaling: This solves their exam week problem. Normally, they run 2 web servers. During busy times, it automatically adds more (up to 10). When it's quiet (like during summer), it removes extra servers to save money.
+
 Microservices: Instead of one giant application, we break it into services. The "Video Service" team can work on video features without affecting the "Payment Service" team. If the Video Service has a bug, students can still access PDFs and take quizzes.
 Multiple Databases: The main database handles important transactions (like recording quiz scores). Read replicas handle all the reading (like loading course materials). This separation makes everything faster.
 S3 for Storage: Instead of storing videos on a server, use S3. It's designed for storing files, it's cheaper, and it automatically makes backups.
 
 	How to Migrate Without Breaking Everything
 The biggest challenge is how to move from the old system to the new one without disrupting 50,000 students. 
+
 Phase 1: The Foundation 
 First, build the basic infrastructure without changing the main application:
 1.	Move the database to AWS RDS (managed database service)
 2.	Set up the load balancer in front of the current server
 3.	Move static files (images, PDFs) to CloudFront
 This phase doesn't change how StudyHub works for users, but it makes the system more reliable.
+
 Phase 2: Extract First Service 
 Start with the easiest service: User Management. Create a separate User Service that handles:
 •	Student and professor logins
 •	User profiles
 •	Permissions
 Run this alongside the old system. When users login, some go to the new service, some to the old. We can fix problems without affecting everyone.
+
 Phase 3: Extract Core Services 
 Now tackle the bigger pieces:
 •	Course Service (courses, materials, enrollment)
 •	Video Service (uploading, processing, streaming videos)
+
 Phase 4: Finish and Cleanup 
 •	Move the remaining pieces
 •	Turn off the old system
@@ -710,10 +786,12 @@ For Students and Professors:
 •	Videos that load quickly without buffering
 •	Faster search for course materials
 •	New features like mobile apps and discussion forums
+
 For the Company:
 •	Ability to grow to 200,000+ users
 •	25% more revenue (from fewer crashes and better features)
 •	Happier customers who don't leave for competitors
+
 For the Development Team:
 •	Ability to deploy new features daily instead of weekly
 •	Teams that don't block each other
@@ -724,18 +802,23 @@ Right now, StudyHub pays about $300/month for their big server (running 24/7). T
 
 	Potential Problems and Solutions
 I know this won't be easy. Here are problems they might face:
+
 Problem 1: Data Migration Headaches
 Moving data from one database to multiple services is tricky. What if some data gets lost or corrupted?
 My Solution: Use AWS Database Migration Service, which is designed for this. Test extensively with fake data first. Have a rollback plan.
+
 Problem 2: Team Learning Curve
 The current team knows how to build monolithic applications, not microservices.
 My Solution: Train them gradually. Start with simple services. Hire one person with microservices experience to guide them.
+
 Problem 3: Increased Complexity
 More services means more things that can go wrong and more things to monitor.
 My Solution: Invest in monitoring tools from day one. Use AWS CloudWatch and X-Ray to see what's happening.
+
 Problem 4: Cost Overruns
 AWS costs can surprise you if you're not careful.
 My Solution: Set up billing alerts. Monitor costs daily at first. Use reserved instances for services that run 24/7.
+
 Problem 5: Cultural Resistance
 People don't like change. The team might resist new ways of working.
 My Solution: Involve the team in planning. Show them how this will make their jobs easier. Celebrate small wins.
@@ -747,11 +830,13 @@ Technical Success:
 •	Can handle 10,000 simultaneous users (currently 1,000)
 •	99.9% uptime (currently about 95%)
 •	Deploy new features daily (currently weekly)
+
 Business Success:
 •	Grow to 200,000 users in 12 months
 •	Increase revenue by 25%
 •	Reduce user complaints by 75%
 •	Launch mobile apps successfully
+
 Team Success:
 •	Developers can deploy without fear of breaking everything
 •	Teams work independently without conflicts
