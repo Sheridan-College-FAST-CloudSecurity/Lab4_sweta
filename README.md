@@ -230,8 +230,10 @@ Key Interactions:
 3.	Web Servers → App Servers: API calls (HTTP/RPC)
 4.	App Servers → Database: SQL queries
 5.	Database → Read Replicas: Asynchronous replication
+   
 	Modern Architecture Diagram: Microservices on AWS
- 
+ <img width="729" height="975" alt="image" src="https://github.com/user-attachments/assets/229fa6c4-65cc-475b-9f4f-a17e73603e8e" />
+
 Key Interactions:
 1.	Clients → CloudFront: Static content caching
 2.	CloudFront → API Gateway: Dynamic requests
@@ -239,41 +241,13 @@ Key Interactions:
 4.	Services → Databases: Each service has own DB
 5.	Services → SQS: Async messages for decoupling
 6.	SQS → Notification Service: Event-driven processing
-Comparison Table
-  Feature	Single-Machine	Three-Tier	Reverse Proxy	Microservices	Serverless
- Complexity	Very Low	Medium	Medium-High	Very High	Medium
- Scalability	Very Poor	Good	Excellent	Excellent	Excellent
- Cost Driver	Cost of a single server.	Cost of multiple servers + load balancer + database.	Cost of proxy servers + backend servers.	Cost of many services, orchestration, and inter-service communication.	Number of requests and compute duration (GB-seconds).
-  Deployment Speed	Very Fast	Slow	Medium	Very Slow (per service)	Very Fast
- Team Size Required	1 developer	2-3 engineers	3-5 engineers	5+ engineers with ops	2-3 developers
- Best For	Prototypes, small sites	Business applications	High-traffic websites	Large enterprises	Event-driven apps
- Worst For	High-growth startups	Real-time systems	Low-budget projects	Small companies	Long-running processes
- Typical AWS Services	EC2, RDS (on same instance not recommended).	EC2, ELB/ALB, RDS, Auto Scaling.	
-EC2 (for proxy/backends), ALB/NLB, ElastiCache.
-	ECS/EKS, API Gateway, SQS/SNS, various databases, X-Ray.	Lambda, API Gateway, DynamoDB, S3, EventBridge.
- Failure Recovery	Manual restart	Tier-by-tier recovery	Proxy cluster needed	Service-by-service	Automatic
- Learning Curve	Beginner	Intermediate	Intermediate	Expert	Intermediate
- Vendor Lock-in	None	Low	Low	Medium	High
- Time to Market	Hours	Days-Weeks	Weeks	Months	Days
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 Part 2: Hands-On Implementation of a Simple Three-Tier Architecture
 1.	Implement a Basic Three-Tier Architecture:
+<img width="818" height="1128" alt="image" src="https://github.com/user-attachments/assets/d40f3b08-5c41-4175-96ef-da1ed3948bd1" />
+
  
 	Data Flow Explanation:
 1.	User request → CloudFront (cache check) → ALB → Web Server
@@ -292,6 +266,7 @@ Part 2: Hands-On Implementation of a Simple Three-Tier Architecture
 
 
 1.	First, Create a VPC (Virtual Private Cloud):
+<img width="975" height="491" alt="image" src="https://github.com/user-attachments/assets/4ba85cd6-983e-4f1d-9993-e8dd616b5373" />
  
 
 2.	Create Security Groups (Firewalls): We need three security groups
@@ -299,25 +274,33 @@ a) Web Server Security Group
 b) Application Security Group
 c) Database Security Group
  
+<img width="975" height="285" alt="image" src="https://github.com/user-attachments/assets/d6ceda79-39de-4d69-abec-a79986e87f46" />
+<img width="975" height="487" alt="image" src="https://github.com/user-attachments/assets/18c34a56-7ae2-49f5-8142-ea382c1a13cd" />
+<img width="974" height="442" alt="image" src="https://github.com/user-attachments/assets/08579e2b-f971-4c62-be6e-b81702a4f170" />
 
  
 
  
 3.	Create EC2 Instance (Web/Presentation Tier):
  
+<img width="975" height="491" alt="image" src="https://github.com/user-attachments/assets/7e579d7c-caab-4719-a434-97f598c22975" />
 
 4. Create RDS Instance (Database Tier):
- 
- 
+ <img width="975" height="492" alt="image" src="https://github.com/user-attachments/assets/db774757-7325-4b05-8fd6-d06298ccac23" />
+
+ <img width="975" height="492" alt="image" src="https://github.com/user-attachments/assets/dec8869d-b81d-4bc6-91e7-d1a32d05aac2" />
+
 
 5. Create EC2 Instance (Application Tier):
  
+<img width="975" height="447" alt="image" src="https://github.com/user-attachments/assets/49a2c26a-310e-47bc-803f-57b6b54424ca" />
 
 
 
 
 6. Test the Complete Setup:
- 
+ <img width="975" height="220" alt="image" src="https://github.com/user-attachments/assets/be16b2d5-8466-4c59-858e-c3f65f594924" />
+
 
 My Three-Tier Architecture Implementation
 How I Set Up My Three-Tier System
@@ -657,6 +640,8 @@ The founders know they need to fix this, or they'll lose users to bigger platfor
 
 Current Architecture (The Messy System)
 Here's what StudyHub looks like right now:
+<img width="975" height="464" alt="image" src="https://github.com/user-attachments/assets/8c0d4817-fe7d-4102-a7f4-bcddcf89ff06" />
+
  
 	Why This Doesn't Work Anymore:
 1.	It Can't Handle Crowds: During peak times (like 8 PM when students study), the CPU hits 95% and everything slows down
@@ -673,6 +658,7 @@ Here's what StudyHub looks like right now:
 
 	My Proposed Solution: A Modern Three-Tier Architecture
 After learning from Netflix and Airbnb, here's what I think StudyHub should build:
+<img width="750" height="1350" alt="image" src="https://github.com/user-attachments/assets/f60aae67-570e-4921-af07-3329b6dbd86c" />
  
 
 	Why This Design is Better:
